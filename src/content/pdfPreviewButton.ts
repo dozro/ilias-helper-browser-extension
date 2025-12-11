@@ -1,0 +1,36 @@
+/*!
+    a chrome extension to help with ilias platform
+    Copyright (C) 2025  itsrye.dev
+    @license GPL-3.0-or-later
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import "./icons";
+import "../styling/styling";
+
+export function createPDFPreviewButton(): HTMLSpanElement {
+  let openPdf = document.createElement("i");
+  openPdf.className =
+    "fas fa-binoculars ry ryIconInBody ryOpenPdfButtonSingleFile";
+  let openPdfToolTip = document.createElement("span");
+  let openPdfWrapper = document.createElement("span");
+  openPdfWrapper.className = "ryButtonTooltipWrapper";
+  openPdfWrapper.appendChild(openPdfToolTip);
+  openPdfWrapper.appendChild(openPdf);
+  openPdfToolTip.className = "ryButtonTooltip";
+  openPdfToolTip.innerText =
+    "Temporarily open this PDF without saving it permanently";
+  return openPdfWrapper;
+}

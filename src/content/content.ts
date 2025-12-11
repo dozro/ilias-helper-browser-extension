@@ -20,94 +20,10 @@
 import $ from "jquery";
 import "./icons";
 import "../styling/styling";
-
-function downloadLinks(urls: string[]) {
-  urls.forEach((url, index) => {
-    setTimeout(() => {
-      console.log(`Opening ${index + 1}/${urls.length}: ${url}`);
-
-      let $tempLink = $(
-        '<a href="' + url + '" hidden="true" download target="_blank"></a>',
-      );
-      $("body").append($tempLink);
-      $tempLink[0]?.click();
-      $tempLink.remove();
-    }, index * 500); // 500ms zwischen jedem Download
-  });
-}
-
-function pdfHandling(pdfUrl: string) {
-  fetch(pdfUrl)
-    .then((r) => r.blob())
-    .then((blob) => {
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
-      // Auto-cleanup after 10s
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    });
-}
-
-function handleBlocks() {
-  let containerBlocks = $(".ilContainerBlock");
-  console.log(`Found ${containerBlocks.length} container blocks.`);
-
-  containerBlocks.each((_, block) => {
-    let header = $(block).find(".ilContainerBlockHeader").first();
-    if (header.length === 0) {
-      console.log("No header found in block");
-      return;
-    }
-
-    let itemsContainer = $(block).find(".ilContainerItemsContainer").first();
-    let listItems = itemsContainer.find(".il_ContainerListItem");
-
-    if (listItems.length === 0) header.addClass("ryHeadingCat0");
-    else if (listItems.length < 3) header.addClass("ryHeadingCat1");
-    else header.addClass("ryHeadingCat2");
-
-    listItems.each((_, item) => {
-      let link = $(item).find("a").first();
-      let url = link.attr("href");
-      if (downloadLinkPattern.test(url || "")) {
-        let meowspan = document.createElement("span");
-        let downloadButtonWrapper = document.createElement("span");
-        let downloadButtonToolTip = document.createElement("span");
-        downloadButtonWrapper.className = "ryButtonTooltipWrapper";
-        let downloadButton = document.createElement("i");
-        downloadButton.className =
-          "fas fa-file-arrow-down ry ryDownloadButtonSingleFile ryIconInBody";
-        downloadButtonWrapper.appendChild(downloadButtonToolTip);
-        downloadButtonToolTip.className = "ryButtonTooltip";
-        downloadButtonToolTip.innerText = "Download this file";
-        downloadButtonWrapper.appendChild(downloadButton);
-        let openPdf = document.createElement("i");
-        openPdf.className =
-          "fas fa-binoculars ry ryIconInBody ryOpenPdfButtonSingleFile";
-        let openPdfToolTip = document.createElement("span");
-        let openPdfWrapper = document.createElement("span");
-        openPdfWrapper.className = "ryButtonTooltipWrapper";
-        openPdfWrapper.appendChild(openPdfToolTip);
-        openPdfWrapper.appendChild(openPdf);
-        openPdfToolTip.className = "ryButtonTooltip";
-        openPdfToolTip.innerText =
-          "Temporarily open this PDF without saving it permanently";
-        meowspan.appendChild(downloadButtonWrapper);
-        meowspan.appendChild(openPdfWrapper);
-        link.before(meowspan);
-      }
-    });
-
-    let headerText = header.find(".ilHeader");
-    if (headerText.length) {
-      let downloadButton = document.createElement("i");
-      downloadButton.className =
-        "fas fa-download ry ryIconInHeading ryDownloadButton";
-      headerText.after(downloadButton);
-    }
-  });
-}
-
-const downloadLinkPattern = /download.html$/;
+import { downloadLinks } from "./downloadLinks";
+import { pdfHandling } from "./pdfHandling";
+import { handleBlocks } from "./blockhandling";
+import { downloadLinkPattern } from "./constants";
 
 $(document).on("click", ".ryDownloadButtonSingleFile", function (e) {
   e.preventDefault();
